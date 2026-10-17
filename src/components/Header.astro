@@ -1,18 +1,14 @@
 ---
-import { NAV, SITE } from '@/lib/site';
+import { NAV } from '@/lib/site';
 import Roll from './Roll.astro';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <header class="site-header" transition:persist="site-header">
   <div class="wrap header-inner">
-    <a href="/" class="brand" data-magnetic aria-label="Aman Gupta, home">
+    <a href="/" class="brand" aria-label="Aman Gupta, home">
       <Roll text="Aman Gupta" />
     </a>
-    <div class="clock mono muted" aria-label={`Local time in ${SITE.location}`}>
-      <span>Pune, IN</span>
-      <span data-clock>--:--</span>
-    </div>
     <nav class="nav" aria-label="Primary">
       <ul>
         {
@@ -75,41 +71,51 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     align-items: center;
     gap: var(--gutter);
   }
+  /* Every item in the bar is a 32px-high flex box, so text and icons share one centre line */
+  .brand,
+  .nav a,
+  .theme-toggle,
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+  }
   .brand {
     font-weight: 600;
     letter-spacing: -0.02em;
     font-size: 1rem;
-  }
-  .clock {
-    display: none;
-    gap: 0.75em;
-  }
-  .clock {
-    color: #fff;
-    opacity: 0.6;
+    justify-self: start;
   }
   .nav {
     display: none;
   }
   .nav ul {
     display: flex;
-    gap: clamp(16px, 2.4vw, 36px);
+    align-items: center;
+    gap: clamp(20px, 2.6vw, 40px);
   }
   .nav a {
     font-size: 0.9375rem;
     position: relative;
-    display: inline-block;
   }
-  .nav a[aria-current='page']::before {
+  /* Active page: a hairline under the label; hover draws the same line in */
+  .nav a::after {
     content: '';
     position: absolute;
-    left: -12px;
-    top: 50%;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 1px;
     background: currentColor;
-    transform: translateY(-50%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease);
+  }
+  .nav a:hover::after,
+  .nav a:focus-visible::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
   .header-actions {
     display: flex;
@@ -118,12 +124,17 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   }
   .theme-toggle {
     width: 32px;
-    height: 32px;
-    display: grid;
-    place-items: center;
+    justify-content: center;
     cursor: pointer;
+    margin-right: -9px; /* optically align the 14px icon with the page margin */
+  }
+  @media (max-width: 899px) {
+    .theme-toggle {
+      margin-right: 0;
+    }
   }
   .theme-dot {
+    display: block;
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -136,15 +147,11 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   }
   .menu-toggle {
     cursor: pointer;
-    padding: 8px 0;
   }
   @media (min-width: 900px) {
     .header-inner {
-      grid-template-columns: 1fr auto auto auto;
-    }
-    .clock {
-      display: inline-flex;
-      justify-self: center;
+      grid-template-columns: 1fr auto auto;
+      column-gap: clamp(24px, 3vw, 48px);
     }
     .nav {
       display: block;
