@@ -1,0 +1,34 @@
+---
+title: Air Quality Forecasting
+summary: Hourly forecasts of air pollution from historical sensor data with Prophet.
+category: Time series
+tags: [Time Series, Machine Learning]
+year: 2024
+role: Data science
+stack: [Python, Pandas, Prophet, Jupyter]
+cover: ../../assets/work/air-quality-forecasting.webp
+coverAlt: Chimneys above a chart of pollution measurements
+order: 4
+featured: true
+metrics:
+  - { label: Forecast accuracy, value: "92%" }
+  - { label: Granularity, value: "Hourly" }
+  - { label: Seasonalities, value: "3" }
+links:
+  repo: https://github.com/amangupta143/Air-Quality-Prediction-FB-Prophet
+---
+
+## Problem
+
+Air quality sensors produce noisy, gappy data, yet people need to know what the air will be like in the next few hours, not just right now.
+
+## Approach
+
+- **Automated cleaning** with outlier detection and imputation from moving averages and seasonal decomposition.
+- **Time series decomposition** to separate trend from daily, weekly and annual cycles.
+- A **Prophet model** with custom seasonality for each of those cycles, forecasting CO, NOx and relative humidity.
+- **Diagnostics** with cross-validation and interactive plots of trend components and forecast uncertainty.
+
+## Results
+
+The pipeline produces hourly forecasts of key air quality indicators at 92% accuracy, with uncertainty bands that make it clear how much to trust each prediction.

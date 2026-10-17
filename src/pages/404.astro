@@ -1,0 +1,45 @@
+---
+import Base from '@/layouts/Base.astro';
+import Roll from '@/components/Roll.astro';
+---
+
+<Base title="Page not found" description="This page does not exist." footer={false}>
+  <section class="nf">
+    <canvas class="nf-field" data-neural-field data-text="404" aria-hidden="true"></canvas>
+    <div class="wrap nf-inner" data-hero>
+      <h1 class="mono muted" data-reveal>Error 404</h1>
+      <p class="lead" data-reveal data-delay="0.15">This page drifted out of the network. Move your cursor to scatter it.</p>
+      <a href="/" class="btn btn-solid" data-magnetic><Roll text="Back home" /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .nf-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .nf-inner {
+    position: relative;
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+    padding-bottom: 48px;
+    pointer-events: none;
+  }
+  .nf-inner a {
+    pointer-events: auto;
+  }
+  .lead {
+    max-width: 28ch;
+  }
+</style>

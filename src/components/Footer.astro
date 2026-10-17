@@ -1,0 +1,129 @@
+---
+import { SITE, SOCIALS } from '@/lib/site';
+import Roll from './Roll.astro';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <a href="/contact" class="marquee" data-marquee aria-label="Let's make something. Go to contact">
+    <div class="marquee-track" aria-hidden="true">
+      {
+        Array.from({ length: 4 }).map(() => (
+          <span class="marquee-item">
+            Let’s make something
+            <svg viewBox="0 0 24 24" class="marquee-arrow">
+              <path d="M5 19 19 5M8 5h11v11" fill="none" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </span>
+        ))
+      }
+    </div>
+  </a>
+
+  <div class="wrap footer-grid">
+    <div class="footer-cta">
+      <p class="mono muted">Say hello</p>
+      <button class="footer-email" type="button" data-copy={SITE.email} data-magnetic>
+        <span data-copy-label>{SITE.email}</span>
+      </button>
+    </div>
+    <ul class="footer-links">
+      {
+        SOCIALS.map((s) => (
+          <li>
+            <a href={s.href} target="_blank" rel="noopener">
+              <Roll text={s.label} />
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href={SITE.resume} target="_blank" rel="noopener"><Roll text="Resume" /></a>
+      </li>
+    </ul>
+    <div class="footer-meta mono muted">
+      <span>© {year} Aman Gupta</span>
+      <span>{SITE.location}</span>
+      <a href="/rss.xml" class="u-link">RSS</a>
+      <button type="button" class="u-link" data-to-top>Back to top ↑</button>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding-bottom: 32px;
+    overflow: hidden;
+  }
+  .marquee {
+    display: block;
+    padding-block: clamp(40px, 7vw, 96px);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding-right: 0.5em;
+    font-size: clamp(3.5rem, 11vw, 10rem);
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .marquee-arrow {
+    width: 0.62em;
+    height: 0.62em;
+    transition: transform 0.6s var(--ease);
+  }
+  .marquee:hover .marquee-arrow {
+    transform: rotate(45deg);
+  }
+  .footer-grid {
+    display: grid;
+    gap: 48px;
+    padding-top: 56px;
+  }
+  .footer-email {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    letter-spacing: -0.035em;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 8px;
+  }
+  .footer-links {
+    display: grid;
+    gap: 6px;
+    font-size: 1.125rem;
+    align-content: start;
+  }
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    align-items: end;
+  }
+  .footer-meta button {
+    cursor: pointer;
+    text-transform: inherit;
+    letter-spacing: inherit;
+  }
+  @media (min-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+    .footer-meta {
+      grid-column: 1 / -1;
+      justify-content: space-between;
+      padding-top: 48px;
+    }
+  }
+</style>

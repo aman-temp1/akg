@@ -1,0 +1,23 @@
+---
+title: BigMart Sales Prediction
+summary: Sales forecasting for 1,559 products across 10 stores with gradient boosting.
+category: Regression
+tags: [Machine Learning]
+year: 2024
+role: Data science
+stack: [Python, Pandas, scikit-learn, XGBoost]
+cover: ../../assets/work/bigmart-sales.webp
+coverAlt: A laptop showing sales charts against a red wall
+order: 9
+featured: false
+metrics:
+  - { label: Products, value: "1,559" }
+  - { label: Stores, value: "10" }
+  - { label: Test R², value: "0.57" }
+links:
+  repo: https://github.com/amangupta143/BigMart-Sales-Prediction
+---
+
+## Overview
+
+The dataset was missing 17% of item weights and 28% of store sizes, so the pipeline starts with mean and mode imputation and IQR-based outlier capping. Eight categorical variables are label-encoded, and a tuned XGBoost regressor predicts sales. Feature importance analysis shows which product and store attributes drive revenue, which feeds inventory decisions.

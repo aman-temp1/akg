@@ -1,0 +1,196 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import WorkList from '@/components/WorkList.astro';
+import Roll from '@/components/Roll.astro';
+import { SITE, formatDate, readingTime } from '@/lib/site';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const featured = work.filter((p) => p.data.featured);
+const posts = (await getCollection('writing')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Aman Gupta',
+  url: SITE.url,
+  email: `mailto:${SITE.email}`,
+  jobTitle: 'Full-stack GenAI engineer',
+  address: { '@type': 'PostalAddress', addressLocality: 'Pune', addressCountry: 'IN' },
+  alumniOf: 'Kalinga Institute of Industrial Technology',
+  sameAs: ['https://github.com/amangupta143', 'https://www.linkedin.com/in/amangupta143', 'https://x.com/aman_gupta_143'],
+};
+---
+
+<Base jsonLd={jsonLd}>
+  <section class="hero" data-hero>
+    <canvas class="hero-field" data-neural-field aria-hidden="true"></canvas>
+    <div class="wrap hero-inner">
+      <div class="hero-top grid-12">
+        <p class="mono muted hero-tag" data-reveal data-delay="0.35">Full-stack GenAI engineer</p>
+        <p class="mono muted hero-avail" data-reveal data-delay="0.45">Based in Pune, India</p>
+      </div>
+      <h1 class="hero-name display" data-reveal="chars">Aman Gupta</h1>
+      <div class="hero-bottom grid-12">
+        <p class="lead hero-lead" data-reveal data-delay="0.5">
+          I build AI products end to end: models, retrieval pipelines, and the interfaces people actually use.
+        </p>
+        <a href="#work" class="mono hero-scroll" data-reveal data-delay="0.7">Scroll to explore ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="wrap section">
+    <div class="section-head">
+      <h2 class="mono muted">Selected work</h2>
+      <a href="/work" class="mono u-link">All {work.length} projects →</a>
+    </div>
+    <WorkList items={featured} />
+  </section>
+
+  <section class="wrap section statement-wrap">
+    <p class="mono muted">(About)</p>
+    <p class="statement" data-fill>
+      I like the part where a model leaves the notebook. Most of my work is turning machine learning into things people
+      can use: a fingerprint classifier behind a web app, a sign-language model on a webcam, a platform 800 students
+      opened in its first month. Now I build with large language models the same way, from retrieval and evaluation
+      to the last pixel of the interface.
+    </p>
+    <a href="/about" class="btn" data-magnetic><Roll text="More about me" /></a>
+  </section>
+
+  <section class="wrap section writing">
+    <div class="section-head">
+      <h2 class="mono muted">Latest writing</h2>
+      <a href="/writing" class="mono u-link">All posts →</a>
+    </div>
+    <ul class="post-rows">
+      {
+        posts.map((p, i) => (
+          <li data-fade data-delay={i * 0.06}>
+            <a href={`/writing/${p.id}`} class="post-row">
+              <span class="mono muted">{formatDate(p.data.date)}</span>
+              <span class="post-title">{p.data.title.split(':')[0]}</span>
+              <span class="mono muted">{readingTime(p.body)} min</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+  }
+  .hero-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: clamp(24px, 4vw, 48px);
+    padding-top: calc(var(--header-h) + 40px);
+    padding-bottom: 32px;
+    pointer-events: none;
+  }
+  .hero-inner a {
+    pointer-events: auto;
+  }
+  .hero-top {
+    margin-bottom: auto;
+    padding-top: 12vh;
+  }
+  .hero-tag {
+    grid-column: 1 / span 2;
+  }
+  .hero-avail {
+    grid-column: 3 / span 2;
+  }
+  .hero-name {
+    font-size: clamp(3rem, 16.6vw, 22rem);
+    margin-left: -0.05em;
+    white-space: nowrap;
+  }
+  .hero-lead {
+    grid-column: 1 / -1;
+    max-width: 24ch;
+  }
+  .hero-scroll {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+  }
+  @media (min-width: 900px) {
+    .hero-tag {
+      grid-column: 1 / span 3;
+    }
+    .hero-avail {
+      grid-column: 7 / span 3;
+    }
+    .hero-lead {
+      grid-column: 7 / span 6;
+    }
+    .hero-scroll {
+      grid-column: 1 / span 3;
+      grid-row: 1;
+      align-self: end;
+    }
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+  .statement-wrap {
+    display: grid;
+    gap: 40px;
+    justify-items: start;
+  }
+  .statement {
+    font-size: clamp(1.75rem, 4.2vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: 500;
+    max-width: 24ch;
+  }
+  .post-rows {
+    border-top: 1px solid var(--line);
+  }
+  .post-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px var(--gutter);
+    padding-block: 24px;
+    border-bottom: 1px solid var(--line);
+    transition: padding 0.6s var(--ease);
+  }
+  .post-row:hover {
+    padding-left: 12px;
+  }
+  .post-title {
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    letter-spacing: -0.03em;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  @media (min-width: 900px) {
+    .post-row {
+      grid-template-columns: 200px 1fr 80px;
+      align-items: baseline;
+    }
+    .post-row > :last-child {
+      text-align: right;
+    }
+  }
+</style>

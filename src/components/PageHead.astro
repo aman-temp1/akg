@@ -1,0 +1,33 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  count?: number;
+}
+const { eyebrow, title, count } = Astro.props;
+---
+
+<header class="wrap page-head" data-hero>
+  <p class="mono muted" data-reveal data-delay="0.2">{eyebrow}</p>
+  <h1 class="display h-xl" data-reveal="chars">
+    {title}{count !== undefined && <sup class="mono count">({String(count).padStart(2, '0')})</sup>}
+  </h1>
+  <slot />
+</header>
+
+<style>
+  .page-head {
+    padding-top: calc(var(--header-h) + clamp(80px, 14vw, 200px));
+    padding-bottom: clamp(48px, 6vw, 96px);
+    display: grid;
+    gap: 24px;
+  }
+  .count {
+    font-size: 0.875rem;
+    vertical-align: top;
+    margin-left: 0.4em;
+    letter-spacing: 0.02em;
+    position: relative;
+    top: 0.6em;
+  }
+</style>

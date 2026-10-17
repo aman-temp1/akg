@@ -1,0 +1,41 @@
+---
+title: KIIT Hub
+summary: An academic companion for KIIT University students that reached 800+ active users in its first month.
+category: Full-stack product
+tags: [Full-stack, Product]
+year: 2025
+role: Founder, design and full-stack engineering
+stack: [React, TypeScript, Vite, Supabase, PostgreSQL, Cloudflare, Bunny.net, Razorpay]
+cover: ../../assets/work/kiit-hub.webp
+coverAlt: KIIT Hub landing page shown on a laptop
+order: 1
+featured: true
+metrics:
+  - { label: Active users, value: "800+" }
+  - { label: Time to traction, value: "1 month" }
+  - { label: Core tools, value: "6" }
+links:
+  live: https://kiithub.com
+---
+
+## Problem
+
+Students at KIIT juggle notes in group chats, old exam papers in random drives, and section swaps negotiated one message at a time. There was no single place to find what you need for a semester.
+
+## Approach
+
+I built KIIT Hub as a one-stop academic platform and shipped it end to end: product, interface, backend, payments and hosting.
+
+- **Study notes repository** organised by course and semester.
+- **Previous year papers** with solutions.
+- **Faculty ratings** driven by the community.
+- **Section swapping** that automatically matches students whose preferences complement each other.
+- **SGPA calculator** with course-specific grading parameters, and a **Pomodoro timer** for focused sessions.
+
+## Architecture
+
+The frontend is a React and TypeScript app built with Vite, with client-side routing and a responsive layout for every device. Supabase provides authentication and a PostgreSQL database secured with row-level security. Cloudflare handles hosting and the CDN, Bunny.net serves heavy study material, and Razorpay processes payments for premium features.
+
+## Results
+
+KIIT Hub gained more than 800 active users within a month of launch. It became a self-sustaining ecosystem where students contribute material, rate faculty and help each other swap sections. Next on the roadmap are a discussion forum, personalised study plans and live updates from university systems.

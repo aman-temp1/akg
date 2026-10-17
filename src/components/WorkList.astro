@@ -1,0 +1,153 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { pad } from '@/lib/site';
+
+interface Props {
+  items: CollectionEntry<'work'>[];
+}
+const { items } = Astro.props;
+---
+
+<div class="work-list" data-follower data-cursor-hide>
+  <ul>
+    {
+      items.map((p, i) => (
+        <li data-fade data-delay={i * 0.05}>
+          <a href={`/work/${p.id}`} class="row" data-preview={i}>
+            <span class="mono muted idx">({pad(p.data.order)})</span>
+            <span class="title">{p.data.title}</span>
+            <span class="cat">{p.data.category}</span>
+            <span class="mono muted year">{p.data.year}</span>
+            <Image src={p.data.cover} alt="" class="thumb mono-img" widths={[240, 480]} sizes="120px" loading="lazy" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="follower" data-follower-box aria-hidden="true">
+    {
+      items.map((p) => (
+        <div class="follower-img" data-follower-img>
+          <Image src={p.data.cover} alt="" class="mono-img" widths={[360, 720]} sizes="360px" loading="lazy" />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .work-list {
+    border-top: 1px solid var(--line);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 8px var(--gutter);
+    padding-block: clamp(20px, 2.6vw, 34px);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s var(--ease);
+    z-index: -1;
+  }
+  .row:hover::before,
+  .row:focus-visible::before {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  .row:hover,
+  .row:focus-visible {
+    color: var(--bg);
+  }
+  .row:hover .muted,
+  .row:focus-visible .muted {
+    color: var(--bg);
+    opacity: 0.6;
+  }
+  .row > * {
+    transition: transform 0.6s var(--ease);
+  }
+  .row:hover .title {
+    transform: translateX(12px);
+  }
+  .idx {
+    padding-left: 4px;
+  }
+  .title {
+    font-size: clamp(1.75rem, 4.6vw, 4.25rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+  .cat {
+    display: none;
+  }
+  .year {
+    padding-right: 4px;
+  }
+  .thumb {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: 80px 1fr 220px 64px;
+    }
+    .cat {
+      display: block;
+      font-size: 0.9375rem;
+    }
+  }
+  @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .row {
+      grid-template-columns: 1fr 96px;
+    }
+    .idx,
+    .cat,
+    .year {
+      display: none;
+    }
+    .thumb {
+      display: block;
+      width: 96px;
+      aspect-ratio: 520 / 550;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+  }
+  .follower {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: clamp(220px, 22vw, 340px);
+    aspect-ratio: 520 / 550;
+    pointer-events: none;
+    z-index: 40;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .follower-img {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(100% 0 0 0);
+  }
+  .follower-img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (pointer: coarse) {
+    .follower {
+      display: none;
+    }
+  }
+</style>

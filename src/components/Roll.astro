@@ -1,0 +1,12 @@
+---
+// Text that rolls up letter by letter on hover of its parent link or button.
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const chars = [...text];
+---
+
+<span class="sr-only">{text}</span><span class="roll" aria-hidden="true">
+  {chars.map((c, i) => <span data-c={c} style={`--i:${i}`}>{c}</span>)}
+</span>

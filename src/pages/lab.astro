@@ -1,0 +1,206 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
+const endpoint = import.meta.env.PUBLIC_ASK_ENDPOINT as string | undefined;
+const suggestions = [
+  'How does the sign language model handle bad lighting?',
+  'What is the three-pass method?',
+  'Which projects use Supabase?',
+  'How do you fill missing data?',
+];
+---
+
+<Base title="Lab" description="Live experiments by Aman Gupta. Ask my portfolio: a retrieval demo that searches every case study and post in your browser.">
+  <PageHead eyebrow="Experiments that run in your browser" title="Lab" />
+
+  <section class="wrap lab" data-lab data-endpoint={endpoint ?? ''}>
+    <div class="lab-head">
+      <p class="mono muted">(01) Ask my portfolio</p>
+      <p class="lab-desc">
+        The retrieval half of a RAG pipeline, running entirely on this page. Your question is tokenised, every paragraph of my
+        case studies and posts is scored with BM25, and the best passages come back with their sources.{' '}
+        {
+          endpoint
+            ? 'The top passages are then sent to a language model, which writes the answer.'
+            : 'The answer below is extractive: the single most relevant sentence, quoted as is.'
+        }
+      </p>
+    </div>
+
+    <form class="ask" data-ask>
+      <label for="q" class="sr-only">Ask a question</label>
+      <input id="q" name="q" placeholder="Ask anything about my work…" autocomplete="off" />
+      <button type="submit" class="btn btn-solid">Ask</button>
+    </form>
+    <ul class="suggest">
+      {
+        suggestions.map((s) => (
+          <li>
+            <button type="button" class="chip" data-suggest>
+              {s}
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ol class="pipeline mono" aria-label="Pipeline steps" data-pipeline>
+      <li data-step="tokenize"><span>01</span> Tokenise</li>
+      <li data-step="score"><span>02</span> Score <b data-count>0</b> chunks</li>
+      <li data-step="rank"><span>03</span> Rank top 3</li>
+      <li data-step="answer"><span>04</span> {endpoint ? 'Generate' : 'Extract'}</li>
+    </ol>
+
+    <div class="answer" data-answer aria-live="polite" hidden>
+      <p class="mono muted">Answer</p>
+      <p class="answer-text" data-answer-text></p>
+    </div>
+
+    <ol class="results" data-results></ol>
+  </section>
+</Base>
+
+<style>
+  .lab {
+    padding-bottom: clamp(96px, 14vw, 200px);
+    display: grid;
+    gap: 32px;
+    max-width: 1240px;
+  }
+  .lab-head {
+    display: grid;
+    gap: 16px;
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
+  .lab-desc {
+    max-width: 62ch;
+    color: var(--muted);
+  }
+  .ask {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 12px;
+    align-items: center;
+  }
+  .ask input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    font-size: clamp(1.375rem, 3vw, 2.5rem);
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    padding: 8px 0;
+  }
+  .ask input:focus {
+    outline: none;
+  }
+  .ask input::placeholder {
+    color: var(--muted);
+  }
+  .suggest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5em 1em;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.4s var(--ease);
+  }
+  .chip:hover {
+    border-color: var(--ink);
+  }
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  @media (min-width: 700px) {
+    .pipeline {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .pipeline li {
+    background: var(--bg);
+    padding: 16px;
+    color: var(--muted);
+    transition:
+      background 0.4s var(--ease),
+      color 0.4s var(--ease);
+  }
+  .pipeline li span {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .pipeline b {
+    font-weight: inherit;
+  }
+  .pipeline li.is-active {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .pipeline li.is-done {
+    color: var(--ink);
+  }
+  .answer {
+    display: grid;
+    gap: 12px;
+  }
+  .answer-text {
+    font-size: clamp(1.375rem, 2.6vw, 2.125rem);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    font-weight: 450;
+    max-width: 40ch;
+  }
+  .results {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  .results :global(li) {
+    border-bottom: 1px solid var(--line);
+  }
+  .results :global(a) {
+    display: grid;
+    gap: 8px var(--gutter);
+    padding-block: 24px;
+  }
+  @media (min-width: 900px) {
+    .results :global(a) {
+      grid-template-columns: 220px 1fr 80px;
+    }
+  }
+  .results :global(.r-title) {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .results :global(.r-text) {
+    color: var(--muted);
+    max-width: 70ch;
+  }
+  .results :global(mark) {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 0 0.15em;
+  }
+  .results :global(.r-score) {
+    text-align: right;
+  }
+</style>
+
+<script>
+  import { mountAsk } from '@/lib/ask';
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-lab]');
+    if (root) mountAsk(root);
+  });
+</script>

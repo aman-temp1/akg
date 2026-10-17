@@ -1,0 +1,30 @@
+---
+title: Medical Cost Prediction
+summary: An interpretable model that estimates individual insurance costs and explains what drives them.
+category: Regression
+tags: [Machine Learning, Healthcare]
+year: 2024
+role: ML engineering
+stack: [Python, scikit-learn, Pandas, Matplotlib]
+cover: ../../assets/work/medical-cost-prediction.webp
+coverAlt: A shopping cart full of pill packets next to a jar of cash
+order: 5
+featured: false
+metrics:
+  - { label: Test R², value: "0.866" }
+  - { label: RMSE, value: "$4,567" }
+links:
+  repo: https://github.com/amangupta143/Medical-Cost-Prediction
+---
+
+## Problem
+
+Insurance pricing feels opaque. I wanted a model that not only predicts an individual's medical costs but also shows which factors push them up.
+
+## Approach
+
+Using Kaggle's insurance dataset, I encoded smoking status and region, engineered a BMI × age interaction term, and trained a multiple linear regression on an 80/20 split. Coefficient analysis and correlation matrices explain each feature's weight, and a REST endpoint serves predictions from demographic inputs.
+
+## Results
+
+The model reaches an R² of 0.866 on held-out data with an RMSE of $4,567, and identifies smoking, BMI and age as the main cost drivers. I built this pipeline as an ML associate at the AISOC society at KIIT.

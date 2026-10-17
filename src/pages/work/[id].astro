@@ -1,0 +1,255 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Roll from '@/components/Roll.astro';
+import { pad } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return work.map((entry, i) => ({
+    params: { id: entry.id },
+    props: { entry, next: work[(i + 1) % work.length] },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+  next: CollectionEntry<'work'>;
+}
+const { entry, next } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<Base title={d.title} description={d.summary} type="article">
+  <article>
+    <header class="wrap cs-head grid-12" data-hero>
+      <div class="cs-text">
+        <a href="/work" class="mono muted back u-link" data-reveal>← All work</a>
+        <p class="mono muted" data-reveal data-delay="0.15">({pad(d.order)}) {d.category}</p>
+        <h1 class="display h-lg cs-title" data-reveal="chars">{d.title}</h1>
+        <p class="lead cs-summary" data-reveal data-delay="0.3">{d.summary}</p>
+      </div>
+      <div class="cs-cover">
+        <Image
+          src={d.cover}
+          alt={d.coverAlt}
+          class="mono-img"
+          widths={[400, 520]}
+          sizes="(min-width: 900px) 34vw, 100vw"
+          loading="eager"
+          transition:name={`cover-${entry.id}`}
+        />
+      </div>
+    </header>
+
+    <dl class="wrap facts">
+      <div data-fade>
+        <dt class="mono muted">Role</dt>
+        <dd>{d.role}</dd>
+      </div>
+      <div data-fade data-delay="0.05">
+        <dt class="mono muted">Year</dt>
+        <dd>{d.year}</dd>
+      </div>
+      <div data-fade data-delay="0.1">
+        <dt class="mono muted">Stack</dt>
+        <dd>{d.stack.join(', ')}</dd>
+      </div>
+      {
+        (d.links.live || d.links.repo) && (
+          <div data-fade data-delay="0.15">
+            <dt class="mono muted">Links</dt>
+            <dd class="links">
+              {d.links.live && (
+                <a href={d.links.live} target="_blank" rel="noopener" class="u-link">
+                  Live site ↗
+                </a>
+              )}
+              {d.links.repo && (
+                <a href={d.links.repo} target="_blank" rel="noopener" class="u-link">
+                  Source on GitHub ↗
+                </a>
+              )}
+            </dd>
+          </div>
+        )
+      }
+    </dl>
+
+    {
+      d.metrics.length > 0 && (
+        <section class="wrap metrics" aria-label="Results">
+          {d.metrics.map((m, i) => (
+            <div class="metric" data-fade data-delay={i * 0.06}>
+              <span class="metric-value">{m.value}</span>
+              <span class="mono muted">{m.label}</span>
+            </div>
+          ))}
+        </section>
+      )
+    }
+
+    <div class="wrap cs-body">
+      <div class="prose-ag">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <a href={`/work/${next.id}`} class="next" data-cursor-text="Next">
+    <div class="wrap next-inner">
+      <span class="mono muted">Next project</span>
+      <span class="next-title display"><Roll text={next.data.title} /></span>
+      <span class="next-media">
+        <Image src={next.data.cover} alt="" class="mono-img" widths={[300, 600]} sizes="300px" loading="lazy" />
+      </span>
+    </div>
+  </a>
+</Base>
+
+<style>
+  .cs-head {
+    padding-top: calc(var(--header-h) + clamp(56px, 9vw, 120px));
+    padding-bottom: clamp(40px, 5vw, 72px);
+    row-gap: 48px;
+  }
+  .cs-text {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 20px;
+    align-content: end;
+  }
+  .back {
+    justify-self: start;
+    margin-bottom: 16px;
+  }
+  .cs-title {
+    max-width: 12ch;
+  }
+  .cs-summary {
+    max-width: 26ch;
+  }
+  .cs-cover {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--surface);
+    max-width: 520px;
+    width: 100%;
+    justify-self: end;
+  }
+  .cs-cover :global(img) {
+    width: 100%;
+    aspect-ratio: 520 / 550;
+    object-fit: cover;
+  }
+  @media (min-width: 900px) {
+    .cs-text {
+      grid-column: 1 / span 7;
+    }
+    .cs-cover {
+      grid-column: 8 / span 5;
+    }
+  }
+  .facts {
+    display: grid;
+    gap: 24px var(--gutter);
+    grid-template-columns: repeat(2, 1fr);
+    padding-block: 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dd {
+    margin-top: 6px;
+    font-size: 1rem;
+  }
+  .links {
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+  }
+  @media (min-width: 900px) {
+    .facts {
+      grid-template-columns: 1.2fr 0.6fr 2fr 1.2fr;
+    }
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px var(--gutter);
+    padding-block: clamp(56px, 8vw, 120px);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 900px) {
+    .metrics {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .metric {
+    display: grid;
+    gap: 10px;
+  }
+  .metric-value {
+    font-size: clamp(2.5rem, 5.6vw, 5rem);
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+  .cs-body {
+    padding-block: clamp(64px, 9vw, 140px);
+    display: grid;
+  }
+  @media (min-width: 900px) {
+    .cs-body .prose-ag {
+      margin-left: calc(100% / 12 * 4);
+    }
+  }
+  .next {
+    display: block;
+    border-top: 1px solid var(--line);
+    padding-block: clamp(64px, 10vw, 160px);
+    position: relative;
+    overflow: hidden;
+  }
+  .next-inner {
+    display: grid;
+    gap: 16px;
+    position: relative;
+  }
+  .next-title {
+    font-size: clamp(2.75rem, 9vw, 9rem);
+  }
+  .next-title :global(.roll) {
+    line-height: 1;
+    padding-bottom: 0.08em;
+  }
+  .next-media {
+    position: absolute;
+    right: var(--margin);
+    top: 50%;
+    width: clamp(140px, 18vw, 260px);
+    aspect-ratio: 520 / 550;
+    overflow: hidden;
+    border-radius: 6px;
+    transform: translateY(-50%) scale(0.6) rotate(-6deg);
+    opacity: 0;
+    transition:
+      transform 0.8s var(--ease),
+      opacity 0.5s var(--ease);
+  }
+  .next-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .next:hover .next-media {
+    transform: translateY(-50%) scale(1) rotate(3deg);
+    opacity: 1;
+  }
+  @media (max-width: 899px) {
+    .next-media {
+      display: none;
+    }
+  }
+</style>

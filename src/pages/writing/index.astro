@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
+import { formatDate, readingTime } from '@/lib/site';
+
+const posts = (await getCollection('writing')).sort((a, b) => +b.data.date - +a.data.date);
+const byYear = Object.entries(
+  posts.reduce<Record<string, typeof posts>>((acc, p) => {
+    const y = String(p.data.date.getUTCFullYear());
+    (acc[y] ??= []).push(p);
+    return acc;
+  }, {}),
+).sort(([a], [b]) => +b - +a);
+---
+
+<Base title="Writing" description="Essays by Aman Gupta on machine learning, deep learning, prompt engineering and building responsible AI.">
+  <PageHead eyebrow="Notes on AI, ML and building things" title="Writing" count={posts.length} />
+
+  <section class="wrap writing-page">
+    {
+      byYear.map(([year, list]) => (
+        <div class="year-group">
+          <h2 class="mono muted year" data-fade>{year}</h2>
+          <ul>
+            {list.map((p, i) => (
+              <li data-fade data-delay={i * 0.05}>
+                <a href={`/writing/${p.id}`} class="post">
+                  <span class="mono muted date">{formatDate(p.data.date)}</span>
+                  <span class="body">
+                    <span class="title">{p.data.title}</span>
+                    <span class="desc muted">{p.data.description}</span>
+                  </span>
+                  <span class="mono muted side">
+                    {p.data.tag} · {readingTime(p.body)} min
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+</Base>
+
+<style>
+  .writing-page {
+    padding-bottom: clamp(96px, 14vw, 200px);
+    display: grid;
+    gap: 72px;
+  }
+  .year-group {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .year-group {
+      grid-template-columns: 160px 1fr;
+    }
+  }
+  .year-group ul {
+    border-top: 1px solid var(--line);
+  }
+  .post {
+    display: grid;
+    gap: 10px var(--gutter);
+    padding-block: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .body {
+    display: grid;
+    gap: 8px;
+  }
+  .title {
+    font-size: clamp(1.375rem, 2.4vw, 2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    font-weight: 500;
+    max-width: 30ch;
+    transition: transform 0.6s var(--ease);
+  }
+  .post:hover .title {
+    transform: translateX(10px);
+  }
+  .desc {
+    max-width: 56ch;
+    font-size: 0.9875rem;
+  }
+  @media (min-width: 900px) {
+    .post {
+      grid-template-columns: 140px 1fr auto;
+      align-items: baseline;
+    }
+    .side {
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+</style>
