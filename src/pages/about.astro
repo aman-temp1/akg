@@ -3,11 +3,10 @@ import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Roll from '@/components/Roll.astro';
 import portrait from '@/assets/about/shore.webp';
-import { SITE } from '@/lib/site';
+import { SITE, EXPERIENCE } from '@/lib/site';
 
 const experience = [
-  { when: '2025', what: 'Founder, KIIT Hub', note: 'Built and launched an academic platform used by 800+ students in its first month.' },
-  { when: 'From 2024', what: 'Machine Learning Associate, AISOC KIIT', note: 'Built ML pipelines, led workshops, mentored 20+ members, ran hackathons for 200+ people.' },
+  ...EXPERIENCE.map((e) => ({ when: e.when, what: `${e.what}, ${e.where}`, note: e.note })),
   { when: 'From 2024', what: 'Volunteer, Women Techmakers', note: 'Co-organised technical workshops and mentored 100+ participants.' },
   { when: '2024', what: 'Participant, Stanford Code in Place', note: 'Selected for Stanford’s CS106A-based programme.' },
   { when: '2022 to 2026', what: 'B.Tech, Computer Science and Systems Engineering, KIIT', note: 'Bhubaneswar. Coursework in machine learning, computer vision, algorithms and linear algebra.' },
@@ -27,13 +26,13 @@ const stack = [
 ];
 ---
 
-<Base title="About" description="Aman Gupta is a full-stack GenAI engineer in Pune, India. Background, experience, certifications and stack.">
+<Base title="About" description="Aman Gupta is a full-stack GenAI engineer at Accenture. Background, experience, certifications and stack.">
   <section class="wrap about-head grid-12" data-hero>
     <div class="about-intro">
       <p class="mono muted" data-reveal data-delay="0.2">About</p>
       <h1 class="display h-lg" data-reveal="chars">Models that ship.</h1>
       <p class="lead" data-reveal data-delay="0.35">
-        I’m Aman, a full-stack GenAI engineer in {SITE.location}. I take AI from an idea to a product people use, and I
+        I’m Aman, a full-stack GenAI engineer at Accenture. I take AI from an idea to a product people use, and I
         care as much about the interface as the model behind it.
       </p>
     </div>

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import WorkList from '@/components/WorkList.astro';
 import Roll from '@/components/Roll.astro';
-import { SITE, formatDate, readingTime } from '@/lib/site';
+import { SITE, EXPERIENCE, formatDate, readingTime } from '@/lib/site';
 
 const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
 const featured = work.filter((p) => p.data.featured);
@@ -16,7 +16,7 @@ const jsonLd = {
   url: SITE.url,
   email: `mailto:${SITE.email}`,
   jobTitle: 'Full-stack GenAI engineer',
-  address: { '@type': 'PostalAddress', addressLocality: 'Pune', addressCountry: 'IN' },
+  worksFor: { '@type': 'Organization', name: 'Accenture' },
   alumniOf: 'Kalinga Institute of Industrial Technology',
   sameAs: ['https://github.com/amangupta143', 'https://www.linkedin.com/in/amangupta143', 'https://x.com/aman_gupta_143'],
 };
@@ -28,7 +28,7 @@ const jsonLd = {
     <div class="wrap hero-inner">
       <div class="hero-top grid-12">
         <p class="mono muted hero-tag" data-reveal data-delay="0.35">Full-stack GenAI engineer</p>
-        <p class="mono muted hero-avail" data-reveal data-delay="0.45">Based in Pune, India</p>
+        <p class="mono muted hero-avail" data-reveal data-delay="0.45">Currently at Accenture</p>
       </div>
       <h1 class="hero-name display" data-reveal="chars">Aman Gupta</h1>
       <div class="hero-bottom grid-12">
@@ -46,6 +46,24 @@ const jsonLd = {
       <a href="/work" class="mono u-link">All {work.length} projects →</a>
     </div>
     <WorkList items={featured} />
+  </section>
+
+  <section class="wrap experience" aria-labelledby="experience-title">
+    <div class="section-head">
+      <h2 class="mono muted" id="experience-title">Experience</h2>
+      <a href="/about" class="mono u-link">Full story →</a>
+    </div>
+    <ol class="exp-rows">
+      {
+        EXPERIENCE.map((e, i) => (
+          <li class="exp-row" data-fade data-delay={i * 0.06}>
+            <span class="mono muted">{e.when}</span>
+            <span class="exp-role">{e.what}</span>
+            <span class="exp-where">{e.where}</span>
+          </li>
+        ))
+      }
+    </ol>
   </section>
 
   <section class="wrap section statement-wrap">
@@ -151,6 +169,34 @@ const jsonLd = {
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: clamp(24px, 3vw, 40px);
+  }
+  .exp-rows {
+    border-top: 1px solid var(--line);
+  }
+  .exp-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px var(--gutter);
+    padding-block: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .exp-role {
+    font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    font-weight: 500;
+  }
+  .exp-where {
+    font-size: 1.0625rem;
+  }
+  @media (min-width: 900px) {
+    .exp-row {
+      grid-template-columns: 200px 1fr 220px;
+      align-items: baseline;
+    }
+    .exp-where {
+      text-align: right;
+    }
   }
   .statement-wrap {
     display: grid;
