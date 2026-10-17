@@ -21,7 +21,6 @@ export const NAV = [
 /** Work history, newest first. Shown on the home page and on About. */
 export const EXPERIENCE = [
   { when: 'Jul 2026 to now', what: 'Full-stack GenAI Engineer', where: 'Accenture', note: 'Joined on 24 July 2026.' },
-  { when: '2025', what: 'Founder', where: 'KIIT Hub', note: 'Built and launched an academic platform used by 800+ students in its first month.' },
   { when: 'From 2024', what: 'Machine Learning Associate', where: 'AISOC KIIT', note: 'Built ML pipelines, led workshops, mentored 20+ members, ran hackathons for 200+ people.' },
 ];
 
