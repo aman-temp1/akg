@@ -1,0 +1,35 @@
+---
+title: Blood Group Detection
+summary: A non-invasive deep learning system that predicts blood group from a fingerprint image.
+category: Deep learning
+tags: [Computer Vision, Deep Learning]
+year: 2025
+role: ML engineering and deployment
+stack: [TensorFlow, Keras, OpenCV, Flask, Docker]
+cover: ../../assets/work/blood-group-detection.webp
+coverAlt: Fingerprint illustration with the label A+
+order: 2
+featured: true
+metrics:
+  - { label: Accuracy, value: "92.2%" }
+  - { label: Clinical samples, value: "6,000+" }
+  - { label: Models in the ensemble, value: "3" }
+---
+
+## Problem
+
+Knowing a blood group usually means drawing blood. Fingerprint ridge patterns are known to correlate with blood group, which opens the door to a fast, non-invasive first screen.
+
+## Approach
+
+- An **ensemble of CNN, ResNet50 and VGG16** models, combined to be more robust than any single network.
+- A **preprocessing pipeline** with heavy augmentation (25% shear and rotation) so the model tolerates how people actually press their fingers on a scanner.
+- Validation on **6,000+ clinical fingerprint samples**.
+
+## Delivery
+
+The model is packaged in Docker and served through a Flask web app, so a clinician can upload a fingerprint and get a prediction in the browser.
+
+## Results
+
+The ensemble reached **92.2% accuracy** in blood group classification, giving a credible non-invasive screen that can reduce the number of blood tests needed.

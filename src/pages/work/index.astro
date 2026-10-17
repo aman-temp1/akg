@@ -1,0 +1,255 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHead from '@/components/PageHead.astro';
+import { pad } from '@/lib/site';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const tags = ['All', ...new Set(work.flatMap((p) => p.data.tags))];
+---
+
+<Base title="Work" description="Selected projects by Aman Gupta: full-stack products, deep learning, computer vision and forecasting.">
+  <PageHead eyebrow="Selected projects, 2024 to now" title="Work" count={work.length} />
+
+  <section class="wrap work-page">
+    <div class="toolbar" data-fade>
+      <div class="filters" role="group" aria-label="Filter by tag">
+        {
+          tags.map((t, i) => (
+            <button type="button" class="chip" data-filter={t} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {t}
+            </button>
+          ))
+        }
+      </div>
+      <div class="views mono" role="group" aria-label="Layout">
+        <button type="button" data-view="grid" aria-pressed="true">Grid</button>
+        <span class="muted">/</span>
+        <button type="button" data-view="list" aria-pressed="false">List</button>
+      </div>
+    </div>
+
+    <ul class="work-grid" data-layout="grid" data-work-items>
+      {
+        work.map((p) => (
+          <li class="item" data-tags={p.data.tags.join('|')} data-flip-id={p.id}>
+            <a href={`/work/${p.id}`} data-cursor-text="View">
+              <div class="media">
+                <Image
+                  src={p.data.cover}
+                  alt={p.data.coverAlt}
+                  class="mono-img"
+                  widths={[400, 800]}
+                  sizes="(min-width: 900px) 33vw, 100vw"
+                  transition:name={`cover-${p.id}`}
+                />
+              </div>
+              <div class="meta">
+                <span class="mono muted">({pad(p.data.order)})</span>
+                <span class="name">{p.data.title}</span>
+                <span class="cat muted">{p.data.category}</span>
+                <span class="mono muted yr">{p.data.year}</span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .work-page {
+    padding-bottom: clamp(96px, 14vw, 200px);
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5em 1em;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition:
+      background 0.4s var(--ease),
+      color 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+  .chip:hover {
+    border-color: var(--ink);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .views {
+    display: flex;
+    gap: 10px;
+  }
+  .views button {
+    cursor: pointer;
+    color: var(--muted);
+    text-transform: inherit;
+    letter-spacing: inherit;
+  }
+  .views button[aria-pressed='true'] {
+    color: var(--ink);
+  }
+
+  .work-grid {
+    display: grid;
+    gap: 56px var(--gutter);
+  }
+  .work-grid[data-layout='grid'] {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 700px) {
+    .work-grid[data-layout='grid'] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .work-grid[data-layout='grid'] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .work-grid[data-layout='grid'] .item:nth-child(3n + 2) {
+      margin-top: 96px;
+    }
+  }
+  .item[hidden] {
+    display: none;
+  }
+  .media {
+    overflow: hidden;
+    border-radius: 6px;
+    aspect-ratio: 520 / 550;
+    background: var(--surface);
+  }
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease);
+  }
+  .item a:hover .media :global(img) {
+    transform: scale(1.05);
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 4px 12px;
+    padding-top: 16px;
+    align-items: baseline;
+  }
+  .name {
+    font-size: 1.375rem;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+  }
+  .cat {
+    grid-column: 2;
+    font-size: 0.9375rem;
+  }
+  .yr {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  /* List layout */
+  .work-grid[data-layout='list'] {
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .work-grid[data-layout='list'] a {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: var(--gutter);
+    align-items: center;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .work-grid[data-layout='list'] .meta {
+    padding-top: 0;
+    grid-template-columns: 56px 1fr;
+  }
+  .work-grid[data-layout='list'] .name {
+    font-size: clamp(1.5rem, 3.4vw, 2.75rem);
+  }
+  .work-grid[data-layout='list'] .yr {
+    grid-column: 2;
+    grid-row: auto;
+  }
+  @media (min-width: 900px) {
+    .work-grid[data-layout='list'] a {
+      grid-template-columns: 120px 1fr;
+    }
+    .work-grid[data-layout='list'] .meta {
+      grid-template-columns: 72px 1fr 220px 64px;
+    }
+    .work-grid[data-layout='list'] .cat {
+      grid-column: 3;
+    }
+    .work-grid[data-layout='list'] .yr {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+
+  document.addEventListener('astro:page-load', () => {
+    const grid = document.querySelector<HTMLElement>('[data-work-items]');
+    if (!grid) return;
+    const items = [...grid.querySelectorAll<HTMLElement>('.item')];
+    const motion = document.documentElement.classList.contains('motion');
+
+    const flip = (change: () => void) => {
+      if (!motion) return change();
+      const state = Flip.getState(items, { props: 'opacity' });
+      change();
+      Flip.from(state, {
+        duration: 0.9,
+        ease: 'expo.out',
+        absolute: true,
+        nested: true,
+        stagger: 0.02,
+        onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6 }),
+        onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.9, duration: 0.4 }),
+      });
+    };
+
+    document.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tag = btn.dataset.filter!;
+        document.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        flip(() => items.forEach((it) => (it.hidden = tag !== 'All' && !it.dataset.tags!.split('|').includes(tag))));
+      });
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        flip(() => (grid.dataset.layout = btn.dataset.view!));
+      });
+    });
+  });
+</script>

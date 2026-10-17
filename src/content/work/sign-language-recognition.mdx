@@ -1,0 +1,39 @@
+---
+title: Sign Language Recognition
+summary: Real-time hand gesture recognition that turns webcam input into text and audio.
+category: Computer vision
+tags: [Computer Vision, Full-stack]
+year: 2024
+role: Computer vision and backend engineering
+stack: [Python, MediaPipe, OpenCV, Flask, WebSockets, AWS EC2]
+cover: ../../assets/work/sign-language-recognition.webp
+coverAlt: Four hand signs, wave, live long and prosper, namaste and hang loose
+order: 3
+featured: true
+metrics:
+  - { label: Accuracy (controlled), value: "95%" }
+  - { label: Throughput, value: "30 FPS" }
+  - { label: Latency, value: "<50 ms" }
+  - { label: Gestures, value: "15+" }
+links:
+  repo: https://github.com/amangupta143/Sign-Language-Recognition-System
+---
+
+## Problem
+
+Most people don't know sign language, and that gap makes everyday conversations hard for people who rely on it. The goal was a tool that runs on an ordinary webcam and translates gestures as they happen.
+
+## Approach
+
+- **MediaPipe Hands** extracts 21 landmarks per hand from each frame.
+- A **custom angle-based classifier** computes the angles between key joints, labels each finger as extended or folded, and matches the geometry against known gestures.
+- **Temporal smoothing** removes flicker between frames.
+- A **Flask backend with WebSockets** streams video and results to a responsive web interface, with a timestamped history that exports to TXT or CSV.
+
+## Challenges
+
+Lighting changes broke early versions, so I added adaptive brightness normalisation and histogram equalisation. To hold 30 FPS on low-end machines I tuned the MediaPipe configuration and skip frames when the device falls behind.
+
+## Results
+
+The system recognises 15+ ASL gestures, including letters, numbers and symbols such as "OK" and "Peace", at 95% accuracy in controlled conditions with under 50 ms of latency. It is deployed on AWS EC2.

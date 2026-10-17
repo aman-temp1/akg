@@ -1,0 +1,27 @@
+---
+title: Student Performance Prediction
+summary: An end-to-end ML pipeline that predicts math scores and serves them through a web app.
+category: Machine learning
+tags: [Machine Learning, Full-stack]
+year: 2025
+role: ML and backend engineering
+stack: [Python, scikit-learn, XGBoost, CatBoost, Flask, AWS]
+cover: ../../assets/work/student-performance.webp
+coverAlt: Illustration of students studying around a giant book
+order: 7
+featured: false
+metrics:
+  - { label: R², value: "0.88" }
+  - { label: MAE, value: "4.2" }
+  - { label: Models compared, value: "7" }
+links:
+  repo: https://github.com/amangupta143/Student-Performance-Prediction
+---
+
+## Overview
+
+The pipeline ingests student data, transforms it with a scikit-learn `ColumnTransformer` (one-hot encoding with rare-category handling, standard scaling), tunes seven regression models with `GridSearchCV`, and keeps the best performer. SHAP values explain each prediction.
+
+## Delivery
+
+A Flask interface validates input and clamps predicted scores to 0 to 100. The app was deployed on AWS Elastic Beanstalk.

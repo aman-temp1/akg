@@ -1,0 +1,157 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import { SITE, formatDate, readingTime } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('writing')).sort((a, b) => +b.data.date - +a.data.date);
+  return posts.map((entry, i) => ({ params: { id: entry.id }, props: { entry, next: posts[(i + 1) % posts.length] } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'writing'>;
+  next: CollectionEntry<'writing'>;
+}
+const { entry, next } = Astro.props;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const d = entry.data;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.date.toISOString(),
+  author: { '@type': 'Person', name: 'Aman Gupta', url: SITE.url },
+  url: new URL(`/writing/${entry.id}`, SITE.url).href,
+};
+---
+
+<Base title={d.title} description={d.description} type="article" jsonLd={jsonLd}>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+  <article data-progress-target>
+    <header class="wrap post-head" data-hero>
+      <a href="/writing" class="mono muted u-link back" data-reveal>← All writing</a>
+      <p class="mono muted" data-reveal data-delay="0.15">
+        {d.tag} · {formatDate(d.date)} · {readingTime(entry.body)} min read
+      </p>
+      <h1 class="post-title" data-reveal="chars">{d.title}</h1>
+      <p class="lead muted post-desc" data-reveal data-delay="0.35">{d.description}</p>
+    </header>
+
+    <div class="wrap post-layout">
+      {
+        toc.length > 2 && (
+          <nav class="toc" aria-label="On this page">
+            <p class="mono muted">On this page</p>
+            <ol>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`} class="u-link">
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+      <div class="prose-ag">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <a href={`/writing/${next.id}`} class="wrap next-post">
+    <span class="mono muted">Read next</span>
+    <span class="next-title">{next.data.title}</span>
+  </a>
+</Base>
+
+<style>
+  .progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 2px;
+    z-index: 70;
+    pointer-events: none;
+  }
+  .progress span {
+    display: block;
+    height: 100%;
+    background: var(--ink);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .post-head {
+    padding-top: calc(var(--header-h) + clamp(64px, 10vw, 140px));
+    padding-bottom: clamp(48px, 6vw, 96px);
+    display: grid;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .back {
+    justify-self: start;
+    margin-bottom: 16px;
+  }
+  .post-title {
+    font-size: clamp(2.25rem, 5.6vw, 5.25rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
+    font-weight: 500;
+    max-width: 20ch;
+  }
+  .post-desc {
+    max-width: 36ch;
+  }
+  .post-layout {
+    display: grid;
+    gap: 48px var(--gutter);
+    padding-block: clamp(56px, 8vw, 120px);
+  }
+  .toc {
+    font-size: 0.875rem;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .toc ol {
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+  }
+  .toc a:hover {
+    color: var(--ink);
+  }
+  @media (min-width: 1100px) {
+    .post-layout {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .toc {
+      grid-column: 1 / span 3;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--header-h) + 32px);
+    }
+    .prose-ag {
+      grid-column: 5 / span 7;
+    }
+  }
+  .next-post {
+    display: grid;
+    gap: 16px;
+    padding-block: clamp(64px, 9vw, 140px);
+    border-top: 1px solid var(--line);
+  }
+  .next-title {
+    font-size: clamp(1.75rem, 4.4vw, 4rem);
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+    font-weight: 500;
+    max-width: 22ch;
+    transition: transform 0.6s var(--ease);
+  }
+  .next-post:hover .next-title {
+    transform: translateX(14px);
+  }
+</style>

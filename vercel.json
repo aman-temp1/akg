@@ -1,0 +1,121 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/project.html",
+      "destination": "/work",
+      "permanent": true
+    },
+    {
+      "source": "/project-single.html",
+      "destination": "/work",
+      "permanent": true
+    },
+    {
+      "source": "/blog.html",
+      "destination": "/writing",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/projects/KIIT-Hub.html",
+      "destination": "/work/kiit-hub",
+      "permanent": true
+    },
+    {
+      "source": "/projects/Sign-Language-Recognition-System.html",
+      "destination": "/work/sign-language-recognition",
+      "permanent": true
+    },
+    {
+      "source": "/projects/air-quality-forcasting.html",
+      "destination": "/work/air-quality-forecasting",
+      "permanent": true
+    },
+    {
+      "source": "/projects/Medical-Cost-Prediction.html",
+      "destination": "/work/medical-cost-prediction",
+      "permanent": true
+    },
+    {
+      "source": "/projects/Password-Generator.html",
+      "destination": "/work/password-generator",
+      "permanent": true
+    },
+    {
+      "source": "/projects/student-performance-prediction.html",
+      "destination": "/work/student-performance",
+      "permanent": true
+    },
+    {
+      "source": "/projects/project-diabetes.html",
+      "destination": "/work/diabetes-prediction",
+      "permanent": true
+    },
+    {
+      "source": "/projects/BigMart-Sales-Prediction.html",
+      "destination": "/work/bigmart-sales",
+      "permanent": true
+    },
+    {
+      "source": "/projects/coming-soon.html",
+      "destination": "/work/blood-group-detection",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/The Art of Feature Engineering.html",
+      "destination": "/writing/feature-engineering",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/The Art of the Prompt Engineering.html",
+      "destination": "/writing/prompt-engineering",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/Computer Vision Unveiled.html",
+      "destination": "/writing/computer-vision-unveiled",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/Master the Art of Reading Research Papers.html",
+      "destination": "/writing/reading-research-papers",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/The Neural Network Journey.html",
+      "destination": "/writing/neural-network-journey",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/Ethical AI Development.html",
+      "destination": "/writing/ethical-ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/documents/resume.pdf",
+      "destination": "/resume.pdf",
+      "permanent": true
+    }
+  ]
+}

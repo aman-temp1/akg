@@ -1,0 +1,45 @@
+---
+// First-visit preloader: a mono counter from 00 to 100, then the panel wipes up.
+// Only rendered visible when the head script adds `is-loading` (first visit, motion allowed).
+---
+
+<div class="preloader" data-preloader aria-hidden="true" transition:persist="preloader">
+  <div class="wrap preloader-inner">
+    <span class="mono">Aman Gupta</span>
+    <span class="preloader-count"><span data-preloader-count>00</span></span>
+    <span class="mono">Portfolio, {new Date().getFullYear()}</span>
+  </div>
+</div>
+
+<style>
+  .preloader {
+    display: none;
+  }
+  :global(html.is-loading) .preloader {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: var(--ink);
+    color: var(--bg);
+  }
+  :global(html.is-loading) {
+    overflow: hidden;
+  }
+  .preloader-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 28px;
+  }
+  .preloader-count {
+    align-self: flex-end;
+    font-size: clamp(6rem, 24vw, 22rem);
+    font-weight: 500;
+    letter-spacing: -0.06em;
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+  }
+</style>

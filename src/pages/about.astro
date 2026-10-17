@@ -1,0 +1,266 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Roll from '@/components/Roll.astro';
+import portrait from '@/assets/about/shore.webp';
+import { SITE } from '@/lib/site';
+
+const experience = [
+  { when: '2025', what: 'Founder, KIIT Hub', note: 'Built and launched an academic platform used by 800+ students in its first month.' },
+  { when: 'From 2024', what: 'Machine Learning Associate, AISOC KIIT', note: 'Built ML pipelines, led workshops, mentored 20+ members, ran hackathons for 200+ people.' },
+  { when: 'From 2024', what: 'Volunteer, Women Techmakers', note: 'Co-organised technical workshops and mentored 100+ participants.' },
+  { when: '2024', what: 'Participant, Stanford Code in Place', note: 'Selected for Stanford’s CS106A-based programme.' },
+  { when: '2022 to 2026', what: 'B.Tech, Computer Science and Systems Engineering, KIIT', note: 'Bhubaneswar. Coursework in machine learning, computer vision, algorithms and linear algebra.' },
+];
+
+const certifications = [
+  { name: 'Machine Learning Specialization', by: 'Stanford University', year: '2024', href: 'https://www.coursera.org/account/accomplishments/specialization/PKTNHCVMO1T2' },
+  { name: 'Mathematics for Machine Learning', by: 'Imperial College London', year: '2025', href: 'https://www.coursera.org/account/accomplishments/specialization/4KR86D382LWB' },
+  { name: 'Introducing Generative AI with AWS', by: 'AWS and Udacity', year: '2024', href: 'https://www.udacity.com/certificate/e/045926fa-32ea-11ef-9cf2-632cf638d205' },
+  { name: 'Data Structures and Algorithms', by: 'UC San Diego', year: '' },
+];
+
+const stack = [
+  { group: 'AI and ML', items: ['LLM APIs', 'RAG', 'Prompt engineering', 'PyTorch', 'TensorFlow', 'Hugging Face', 'scikit-learn', 'OpenCV', 'MediaPipe'] },
+  { group: 'Product', items: ['TypeScript', 'React', 'Astro', 'Python', 'FastAPI', 'Flask', 'Supabase', 'PostgreSQL'] },
+  { group: 'Infrastructure', items: ['Docker', 'AWS', 'Cloudflare', 'Git', 'CI/CD', 'Linux'] },
+];
+---
+
+<Base title="About" description="Aman Gupta is a full-stack GenAI engineer in Pune, India. Background, experience, certifications and stack.">
+  <section class="wrap about-head grid-12" data-hero>
+    <div class="about-intro">
+      <p class="mono muted" data-reveal data-delay="0.2">About</p>
+      <h1 class="display h-lg" data-reveal="chars">Models that ship.</h1>
+      <p class="lead" data-reveal data-delay="0.35">
+        I’m Aman, a full-stack GenAI engineer in {SITE.location}. I take AI from an idea to a product people use, and I
+        care as much about the interface as the model behind it.
+      </p>
+    </div>
+    <figure class="portrait" data-clip>
+      <Image
+        src={portrait}
+        alt="Aman Gupta standing on a beach at sunset"
+        class="mono-img"
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 900px) 34vw, 100vw"
+        loading="eager"
+      />
+    </figure>
+  </section>
+
+  <section class="wrap section bio grid-12">
+    <h2 class="mono muted bio-label">(01) Story</h2>
+    <div class="bio-text prose-ag">
+      <p data-reveal>
+        I started with classical machine learning at KIIT: regression, forecasting and computer vision. Very quickly the
+        interesting part stopped being the model score and became what happens after it, when a model has to run behind a
+        web app, on a webcam, or in front of a real user.
+      </p>
+      <p data-reveal>
+        That pulled me into full-stack work. I built KIIT Hub with React, TypeScript and Supabase, and it reached more than
+        800 students in a month. I deployed a fingerprint blood group classifier as a Dockerised Flask app, and a sign
+        language recogniser that runs in real time.
+      </p>
+      <p data-reveal>
+        Today I work at the point where both meet: building with large language models, designing retrieval and evaluation,
+        and shipping the product around them. I also write about what I learn.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap section-sm grid-12">
+    <h2 class="mono muted bio-label">(02) Experience</h2>
+    <ol class="timeline">
+      {
+        experience.map((e, i) => (
+          <li data-fade data-delay={i * 0.05}>
+            <span class="mono muted">{e.when}</span>
+            <span class="t-what">{e.what}</span>
+            <span class="muted t-note">{e.note}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap section-sm grid-12">
+    <h2 class="mono muted bio-label">(03) Stack</h2>
+    <div class="stack">
+      {
+        stack.map((s, i) => (
+          <div data-fade data-delay={i * 0.06}>
+            <h3 class="mono muted">{s.group}</h3>
+            <ul>
+              {s.items.map((it) => (
+                <li>{it}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap section-sm grid-12">
+    <h2 class="mono muted bio-label">(04) Certifications</h2>
+    <ul class="certs">
+      {
+        certifications.map((c, i) => (
+          <li data-fade data-delay={i * 0.05}>
+            {c.href ? (
+              <a href={c.href} target="_blank" rel="noopener" class="cert">
+                <span class="c-name">{c.name} ↗</span>
+                <span class="muted">{c.by}</span>
+                <span class="mono muted">{c.year}</span>
+              </a>
+            ) : (
+              <span class="cert">
+                <span class="c-name">{c.name}</span>
+                <span class="muted">{c.by}</span>
+                <span class="mono muted">{c.year}</span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap section-sm cta">
+    <a href={SITE.resume} class="btn btn-solid" target="_blank" rel="noopener" data-magnetic><Roll text="Download resume" /></a>
+    <a href="/contact" class="btn" data-magnetic><Roll text="Get in touch" /></a>
+  </section>
+</Base>
+
+<style>
+  .about-head {
+    padding-top: calc(var(--header-h) + clamp(64px, 10vw, 140px));
+    row-gap: 48px;
+    align-items: end;
+  }
+  .about-intro {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 24px;
+  }
+  .about-intro .lead {
+    max-width: 28ch;
+  }
+  .portrait {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 4 / 5;
+  }
+  .portrait :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (min-width: 900px) {
+    .about-intro {
+      grid-column: 1 / span 7;
+    }
+    .portrait {
+      grid-column: 9 / span 4;
+    }
+  }
+  .section-sm {
+    padding-block: clamp(56px, 8vw, 120px);
+    border-top: 1px solid var(--line);
+    row-gap: 24px;
+  }
+  .bio-label {
+    grid-column: 1 / -1;
+  }
+  .bio-text,
+  .timeline,
+  .stack,
+  .certs {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 900px) {
+    .bio-label {
+      grid-column: 1 / span 3;
+    }
+    .bio-text,
+    .timeline,
+    .stack,
+    .certs {
+      grid-column: 5 / span 8;
+    }
+  }
+  .bio-text {
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    max-width: 44ch;
+  }
+  .timeline li {
+    display: grid;
+    gap: 6px var(--gutter);
+    padding-block: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .timeline li:first-child {
+    padding-top: 0;
+  }
+  .t-what {
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+  @media (min-width: 900px) {
+    .timeline li {
+      grid-template-columns: 150px 1fr;
+    }
+    .t-note {
+      grid-column: 2;
+    }
+  }
+  .stack {
+    display: grid;
+    gap: 32px var(--gutter);
+  }
+  @media (min-width: 700px) {
+    .stack {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .stack h3 {
+    margin-bottom: 14px;
+  }
+  .stack li {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+  .cert {
+    display: grid;
+    gap: 4px var(--gutter);
+    padding-block: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .certs li:first-child .cert {
+    padding-top: 0;
+  }
+  .c-name {
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  a.cert:hover .c-name {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  @media (min-width: 900px) {
+    .cert {
+      grid-template-columns: 1fr 220px 60px;
+      align-items: baseline;
+    }
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: clamp(96px, 12vw, 180px);
+  }
+</style>

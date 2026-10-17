@@ -1,0 +1,55 @@
+<div class="cursor" data-cursor aria-hidden="true" transition:persist="cursor">
+  <span class="cursor-dot"></span>
+  <span class="cursor-label" data-cursor-label></span>
+</div>
+
+<style>
+  .cursor {
+    display: none;
+  }
+  @media (pointer: fine) {
+    :global(html.motion) .cursor {
+      display: block;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 120;
+      pointer-events: none;
+      mix-blend-mode: difference;
+      color: #fff;
+    }
+  }
+  .cursor-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.45s var(--ease);
+  }
+  :global(.cursor.is-hover) .cursor-dot {
+    transform: scale(4.2);
+  }
+  :global(.cursor.is-label) .cursor-dot {
+    transform: scale(9);
+  }
+  :global(.cursor.is-hidden) .cursor-dot {
+    transform: scale(0);
+  }
+  .cursor-label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #000;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease);
+  }
+  :global(.cursor.is-label) .cursor-label {
+    opacity: 1;
+  }
+</style>

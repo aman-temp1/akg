@@ -1,0 +1,427 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---------- Tokens ---------- */
+:root {
+  --bg: #f4f3ef;
+  --ink: #0e0e0e;
+  --muted: #6f6d68;
+  --line: rgb(14 14 14 / 0.12);
+  --surface: #eae9e4;
+  --grain-opacity: 0.045;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-ui: 0.4s;
+  --dur-reveal: 0.9s;
+  --dur-page: 1.2s;
+
+  --gutter: 24px;
+  --margin: max(20px, 5vw);
+  --header-h: 72px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0d0d0c;
+  --ink: #edebe6;
+  --muted: #8f8d87;
+  --line: rgb(237 235 230 / 0.14);
+  --surface: #181816;
+  --grain-opacity: 0.06;
+  color-scheme: dark;
+}
+
+@theme {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-gutter: stable;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+  body {
+    min-height: 100svh;
+    background: var(--bg);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+}
+
+/* ---------- Layout ---------- */
+.wrap {
+  padding-inline: var(--margin);
+  width: 100%;
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+@media (min-width: 900px) {
+  .grid-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+.hairline {
+  border-color: var(--line);
+}
+
+/* ---------- Type ---------- */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.muted {
+  color: var(--muted);
+}
+.display {
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+.h-xl {
+  font-size: clamp(3.25rem, 11vw, 11rem);
+}
+.h-lg {
+  font-size: clamp(2.5rem, 7vw, 6.5rem);
+}
+.h-md {
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  font-weight: 500;
+}
+.lead {
+  font-size: clamp(1.375rem, 2.6vw, 2.375rem);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  font-weight: 450;
+}
+.section {
+  padding-block: clamp(96px, 16vw, 220px);
+}
+
+/* Split-text line masks (GSAP SplitText `mask: 'lines'`) */
+.line-mask {
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+/* Motion start states only apply when JS runs and motion is allowed */
+html.motion [data-reveal],
+html.motion [data-fade] {
+  visibility: hidden;
+}
+
+/* ---------- Text roll links ---------- */
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.2;
+}
+.roll > span {
+  display: inline-block;
+  position: relative;
+  white-space: pre;
+  transition: transform var(--dur-ui) var(--ease);
+  transition-delay: calc(var(--i) * 18ms);
+}
+.roll > span::after {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+a:hover .roll > span,
+a:focus-visible .roll > span,
+button:hover .roll > span,
+button:focus-visible .roll > span {
+  transform: translateY(-100%);
+}
+
+/* ---------- Underline link ---------- */
+.u-link {
+  background: linear-gradient(currentColor, currentColor) no-repeat 100% 100% / 0 1px;
+  transition: background-size var(--dur-ui) var(--ease);
+}
+.u-link:hover,
+.u-link:focus-visible {
+  background-size: 100% 1px;
+  background-position: 0 100%;
+}
+
+/* ---------- Button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 0.95em 1.6em;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    background-color var(--dur-ui) var(--ease),
+    color var(--dur-ui) var(--ease);
+}
+.btn:hover,
+.btn:focus-visible {
+  background: var(--ink);
+  color: var(--bg);
+}
+.btn-solid {
+  background: var(--ink);
+  color: var(--bg);
+}
+.btn-solid:hover,
+.btn-solid:focus-visible {
+  background: transparent;
+  color: var(--ink);
+}
+
+/* ---------- Images: pure monochrome ---------- */
+.mono-img {
+  filter: grayscale(1) contrast(1.05);
+}
+[data-theme='dark'] .mono-img {
+  filter: grayscale(1) contrast(1.05) brightness(0.88);
+}
+
+/* ---------- Grain ---------- */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Page transitions (native view transitions) ---------- */
+@keyframes vt-old {
+  to {
+    opacity: 0.4;
+    transform: translateY(-6vh) scale(0.98);
+  }
+}
+@keyframes vt-new {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+::view-transition-old(root) {
+  animation: 0.9s var(--ease) both vt-old;
+}
+::view-transition-new(root) {
+  animation: 1s var(--ease) both vt-new;
+}
+::view-transition-group(*) {
+  animation-duration: 0.9s;
+  animation-timing-function: var(--ease);
+}
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+::view-transition-image-pair(*) {
+  isolation: auto;
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  object-fit: cover;
+}
+/* Theme toggle uses its own circular reveal */
+html.theme-switching::view-transition-old(root) {
+  animation: none;
+}
+html.theme-switching::view-transition-new(root) {
+  animation: 0.8s var(--ease) both theme-reveal;
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--tx, 50%) var(--ty, 0%));
+  }
+  to {
+    clip-path: circle(var(--tr, 150vmax) at var(--tx, 50%) var(--ty, 0%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.2s !important;
+    animation-name: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: 0.2s linear both fade-simple !important;
+  }
+  .roll > span {
+    transition: none;
+  }
+  a:hover .roll > span {
+    transform: none;
+  }
+  a:hover .roll {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+@keyframes fade-simple {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Prose (posts and case studies) ---------- */
+.prose-ag {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  max-width: 64ch;
+}
+.prose-ag > * + * {
+  margin-top: 1.15em;
+}
+.prose-ag h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  font-weight: 500;
+  margin-top: 2.4em;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+.prose-ag h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  margin-top: 2em;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+.prose-ag h2 + *,
+.prose-ag h3 + * {
+  margin-top: 0.7em;
+}
+.prose-ag a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.prose-ag ul,
+.prose-ag ol {
+  padding-left: 1.25em;
+}
+.prose-ag ul {
+  list-style: none;
+}
+.prose-ag ul > li {
+  position: relative;
+}
+.prose-ag ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.1em;
+  top: 0.78em;
+  width: 0.5em;
+  height: 1px;
+  background: currentColor;
+}
+.prose-ag ol {
+  list-style: decimal-leading-zero;
+}
+.prose-ag li + li {
+  margin-top: 0.45em;
+}
+.prose-ag strong {
+  font-weight: 600;
+}
+.prose-ag blockquote {
+  border-left: 1px solid var(--ink);
+  padding-left: 1.25em;
+  font-size: 1.375rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.prose-ag code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--surface);
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+}
+.prose-ag pre {
+  font-size: 0.875rem;
+  padding: 1.25em;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+.prose-ag pre code {
+  background: none;
+  padding: 0;
+}
+.astro-code,
+.astro-code span {
+  background-color: var(--surface) !important;
+}
+[data-theme='dark'] .astro-code,
+[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+}
